@@ -156,6 +156,7 @@ if IsAnimeDefenders then
 	for _, ModuleData in pairs(Actions) do
 		if not v.isReplicated and v.Fire ~= nil then
 			Remotes[_] = Instance.new("RemoteEvent")
+			local MethodName = _
 			local originalMethod
 			originalMethod = hookFunction(
 				ModuleData.Fire,
@@ -180,6 +181,7 @@ if IsAnimeDefenders then
 								args = vargs,
 								func = getInfo(3).func,
                                 IsAnimeDefenders = IsAnimeDefenders,
+								AnimeDefendersRemote = MethodName,
 							}
 
 							remote:IncrementCalls(call)
