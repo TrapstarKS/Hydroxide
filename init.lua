@@ -6,7 +6,6 @@ end
 
 local web = true
 local DebugMode = false
-print("Hydroxide is loading..." .. (DebugMode and " (Debug Mode)" or ""))
 local user = "TrapstarKS" -- change if you're using a fork
 local branch = "revision"
 local importCache = {}
@@ -192,8 +191,6 @@ local releaseInfo = HttpService:JSONDecode(game:HttpGet("https://api.github.com/
 if readFile and writeFile then
     local hasFolderFunctions = (isFolder and makeFolder) ~= nil
     local ran, result = pcall(readFile, "__oh_version.txt")
-
-    print(result, releaseInfo.tag_name, result == releaseInfo.tag_name)
 
     if not ran or releaseInfo.tag_name ~= result then
         if hasFolderFunctions then

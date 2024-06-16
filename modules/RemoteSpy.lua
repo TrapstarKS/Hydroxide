@@ -154,7 +154,6 @@ if IsAnimeDefenders then
 	local Actions = require(game.ReplicatedStorage.Actions)
 	local Remotes = {}
 	for _, ModuleData in pairs(Actions) do
-		print("Hooking " .. _)
 		if ModuleData.isReplicated then
 			for i, v in pairs({ "Fire", "Invoke" }) do
 				if ModuleData[v] == nil then continue end
