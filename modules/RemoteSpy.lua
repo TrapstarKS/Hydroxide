@@ -154,15 +154,7 @@ if IsAnimeDefenders then
 	local Actions = require(game.ReplicatedStorage.Actions)
 	local Remotes = {}
 	for _, ModuleData in pairs(Actions) do
-		if ModuleData == nil then
-			print("ModuleData is nil")
-			continue
-		end
-
-		print(_, ModuleData)
 		print("Hooking " .. _)
-		print("Is Replicated" .. tostring(ModuleData.isReplicated))
-
 		if not ModuleData.isReplicated and ModuleData.Fire ~= nil then
 			Remotes[_] = Instance.new("RemoteEvent")
 			local MethodName = _
@@ -171,7 +163,7 @@ if IsAnimeDefenders then
 				ModuleData.Fire,
 				newCClosure(function(...)
 					local instance = Remotes[_]
-
+					print("Fired " .. _) -- debug
 					if instance.ClassName == "RemoteEvent" and remotesViewing[instance.ClassName] and instance ~= remoteDataEvent then
 						local remote = currentRemotes[instance]
 						local vargs = { ... }
