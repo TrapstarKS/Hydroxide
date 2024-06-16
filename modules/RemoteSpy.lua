@@ -155,6 +155,7 @@ if IsAnimeDefenders then
 	local Remotes = {}
 	for _, ModuleData in pairs(Actions) do
 		print("Hooking " .. _)
+		print("Is Replicated" .. ModuleData.isReplicated)
 		if not ModuleData.isReplicated and ModuleData.Fire ~= nil then
 			Remotes[_] = Instance.new("RemoteEvent")
 			local MethodName = _
