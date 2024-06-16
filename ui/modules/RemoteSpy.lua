@@ -399,6 +399,7 @@ function ArgsLog.new(log, callInfo)
 		selected.func = callInfo.func
 		selected.IsAnimeDefenders = callInfo.IsAnimeDefenders
 		selected.AnimeDefendersRemote = callInfo.AnimeDefendersRemote
+		selected.MethodAnimeDefenders = callInfo.MethodAnimeDefenders
 		selected.callPodButton = button
 	end)
 
@@ -845,7 +846,7 @@ scriptContext:SetCallback(function()
 		end
 
 		if selected.IsAnimeDefenders then
-			setClipboard(script .. "oh." .. selected.AnimeDefendersRemote .. ":" .. "Fire" .. "(" .. args:sub(1, -3) .. ")")
+			setClipboard(script .. "oh." .. selected.AnimeDefendersRemote .. ":" .. selected.MethodAnimeDefenders .. "(" .. args:sub(1, -3) .. ")")
 		else
 			setClipboard(script .. "\n" .. remotePath .. ":" .. method .. "(" .. args:sub(1, -3) .. ")")
 		end

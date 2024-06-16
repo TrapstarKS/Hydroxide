@@ -155,60 +155,57 @@ if IsAnimeDefenders then
 	local Remotes = {}
 	for _, ModuleData in pairs(Actions) do
 		print("Hooking " .. _)
-		if ModuleData.isReplicated and ModuleData.Fire ~= nil then
-			Remotes[_] = Instance.new("RemoteEvent")
-			Remotes[_].Name = _
-			local MethodName = _
-			local originalMethod = rawget(ModuleData, "Fire")
+		if ModuleData.isReplicated then
+			for i, v in pairs({ "Fire", "Invoke" }) do
+				if ModuleData[v] == nil then continue end
 
-			rawset(ModuleData, "Fire", newCClosure(function(...)
-				local instance = Remotes[_]
-				local method = "FireServer"
-				print(instance.ClassName)
+				Remotes[_] = Instance.new(v == "Fire" and "RemoteEvent" or "RemoteFunction")
+				Remotes[_].Name = _
+				local MethodName = _
 
-				if instance.ClassName ~= "RemoteEvent" then
-					print("Skipped3 " .. MethodName)
-				end
+				local originalMethod = rawget(ModuleData, v)
+				rawset(
+					ModuleData,
+					v,
+					newCClosure(function(...)
+						local instance = Remotes[_]
+						local method = v == "Fire" and "FireServer" or "InvokeServer"
+						if remotesViewing[instance.ClassName] and instance ~= remoteDataEvent and remoteMethods[method] then
+							local remote = currentRemotes[instance]
+							local vargs = { select(2, ...) }
 
-				if remotesViewing[instance.ClassName] and instance ~= remoteDataEvent and remoteMethods[method] then
-					local remote = currentRemotes[instance]
-					local vargs = { select(2, ...) }
+							if not remote then
+								remote = Remote.new(instance)
+								currentRemotes[instance] = remote
+							end
 
-					if not remote then
-						remote = Remote.new(instance)
-						currentRemotes[instance] = remote
-					end
+							local remoteIgnored = remote.Ignored
+							local remoteBlocked = remote.Blocked
+							local argsIgnored = remote.AreArgsIgnored(remote, vargs)
+							local argsBlocked = remote.AreArgsBlocked(remote, vargs)
 
-					local remoteIgnored = remote.Ignored
-					local remoteBlocked = remote.Blocked
-					local argsIgnored = remote.AreArgsIgnored(remote, vargs)
-					local argsBlocked = remote.AreArgsBlocked(remote, vargs)
+							if eventSet and (not remoteIgnored and not argsIgnored) then
+								local call = {
+									script = getCallingScript((PROTOSMASHER_LOADED ~= nil and 2) or nil),
+									args = vargs,
+									func = getInfo(3).func,
+									IsAnimeDefenders = IsAnimeDefenders,
+									AnimeDefendersRemote = MethodName,
+									MethodAnimeDefenders = "Fire",
+								}
+								remote.IncrementCalls(remote, call)
+								remoteDataEvent.Fire(remoteDataEvent, instance, call)
+							end
 
-					if eventSet and (not remoteIgnored and not argsIgnored) then
-						local call = {
-							script = getCallingScript((PROTOSMASHER_LOADED ~= nil and 2) or nil),
-							args = vargs,
-							func = getInfo(3).func,
-							IsAnimeDefenders = IsAnimeDefenders,
-							AnimeDefendersRemote = MethodName,
-						}
+							if remoteBlocked or argsBlocked then return end
+						end
 
-						print("Calling " .. MethodName)
-						remote.IncrementCalls(remote, call)
-						remoteDataEvent.Fire(remoteDataEvent, instance, call)
-					else
-						print("Skipped " .. MethodName)
-					end
+						return originalMethod(...)
+					end)
+				)
 
-					if remoteBlocked or argsBlocked then return end
-				else
-					print("Skipped2 " .. MethodName)
-				end
-
-				return originalMethod(...)
-			end))
-
-			oh.Hooks[originalMethod] = Remotes[_]
+				oh.Hooks[originalMethod] = Remotes[_]
+			end
 		end
 	end
 end
