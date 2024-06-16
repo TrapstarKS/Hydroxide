@@ -162,7 +162,8 @@ if IsAnimeDefenders then
 
 			rawset(ModuleData, "Fire", newCClosure(function(...)
 				local instance = Remotes[_]
-				
+				local method = "FireServer"
+				print(instance,ClassName)
 				if remotesViewing[instance.ClassName] and instance ~= remoteDataEvent and remoteMethods[method] then
 					local remote = currentRemotes[instance]
 					local vargs = { ... }
