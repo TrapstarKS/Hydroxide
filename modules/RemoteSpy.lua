@@ -162,8 +162,8 @@ if IsAnimeDefenders then
 
 			rawset(ModuleData, "Fire", newCClosure(function(...)
 				local instance = Remotes[_]
-				print("Fired " .. _) -- debug
-				if instance.ClassName == "RemoteEvent" and remotesViewing[instance.ClassName] and instance ~= remoteDataEvent then
+				
+				if remotesViewing[instance.ClassName] and instance ~= remoteDataEvent and remoteMethods[method] then
 					local remote = currentRemotes[instance]
 					local vargs = { ... }
 
@@ -173,7 +173,9 @@ if IsAnimeDefenders then
 					end
 
 					local remoteIgnored = remote.Ignored
-					local argsIgnored = remote:AreArgsIgnored(vargs)
+					local remoteBlocked = remote.Blocked
+					local argsIgnored = remote.AreArgsIgnored(remote, vargs)
+					local argsBlocked = remote.AreArgsBlocked(remote, vargs)
 
 					if eventSet and (not remoteIgnored and not argsIgnored) then
 						local call = {
@@ -184,11 +186,16 @@ if IsAnimeDefenders then
 							AnimeDefendersRemote = MethodName,
 						}
 
-						remote:IncrementCalls(call)
-						remoteDataEvent:Fire(instance, call)
+						print("Calling " .. MethodName)
+						remote.IncrementCalls(remote, call)
+						remoteDataEvent.Fire(remoteDataEvent, instance, call)
+					else
+						print("Skipped " .. MethodName)
 					end
 
-					if remote.Blocked or remote:AreArgsBlocked(vargs) then return end
+					if remoteBlocked or argsBlocked then return end
+				else
+					print("Skipped2 " .. MethodName)
 				end
 
 				return originalMethod(...)
