@@ -159,8 +159,8 @@ if IsAnimeDefenders then
 			for i, v in pairs({ "Fire", "Invoke" }) do
 				if ModuleData[v] == nil then continue end
 
-				Remotes[_] = Instance.new(v == "Fire" and "RemoteEvent" or "RemoteFunction")
-				Remotes[_].Name = _
+				local remoteF = Instance.new(v == "Fire" and "RemoteEvent" or "RemoteFunction")
+				remoteF.Name = _
 				local MethodName = _
 
 				local originalMethod = rawget(ModuleData, v)
@@ -168,7 +168,7 @@ if IsAnimeDefenders then
 					ModuleData,
 					v,
 					newCClosure(function(...)
-						local instance = Remotes[_]
+						local instance = remoteF
 						local method = v == "Fire" and "FireServer" or "InvokeServer"
 						if remotesViewing[instance.ClassName] and instance ~= remoteDataEvent and remoteMethods[method] then
 							local remote = currentRemotes[instance]
