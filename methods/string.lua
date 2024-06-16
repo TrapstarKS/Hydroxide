@@ -3,6 +3,10 @@ local methods = {}
 local function toString(value)
     local dataType = typeof(value)
 
+    if dataType == "table" then
+        return tableToString(value)
+    end
+
     if dataType == "userdata" or dataType == "table" then
         local mt = getMetatable(value)
         local __tostring = mt and rawget(mt, "__tostring")
