@@ -161,7 +161,7 @@ if IsAnimeDefenders then
 
 		print(_, ModuleData)
 		print("Hooking " .. _)
-		print("Is Replicated" .. ModuleData.isReplicated)
+		print("Is Replicated" .. tostring(ModuleData.isReplicated))
 
 		if not ModuleData.isReplicated and ModuleData.Fire ~= nil then
 			Remotes[_] = Instance.new("RemoteEvent")
