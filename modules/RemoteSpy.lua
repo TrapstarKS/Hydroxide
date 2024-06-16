@@ -155,7 +155,7 @@ if IsAnimeDefenders then
 	local Remotes = {}
 	for _, ModuleData in pairs(Actions) do
 		print("Hooking " .. _)
-		if not v.isReplicated and v.Fire ~= nil then
+		if not ModuleData.isReplicated and ModuleData.Fire ~= nil then
 			Remotes[_] = Instance.new("RemoteEvent")
 			local MethodName = _
 			local originalMethod
@@ -181,7 +181,7 @@ if IsAnimeDefenders then
 								script = getCallingScript((PROTOSMASHER_LOADED ~= nil and 2) or nil),
 								args = vargs,
 								func = getInfo(3).func,
-                                IsAnimeDefenders = IsAnimeDefenders,
+								IsAnimeDefenders = IsAnimeDefenders,
 								AnimeDefendersRemote = MethodName,
 							}
 
