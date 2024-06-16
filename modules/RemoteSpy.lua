@@ -191,7 +191,7 @@ if IsAnimeDefenders then
 									func = getInfo(3).func,
 									IsAnimeDefenders = IsAnimeDefenders,
 									AnimeDefendersRemote = MethodName,
-									MethodAnimeDefenders = "Fire",
+									MethodAnimeDefenders = v,
 								}
 								remote.IncrementCalls(remote, call)
 								remoteDataEvent.Fire(remoteDataEvent, instance, call)
