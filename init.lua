@@ -6,6 +6,7 @@ end
 
 local web = true
 local DebugMode = true
+print("Hydroxide is loading..." .. (DebugMode and " (Debug Mode)" or ""))
 local user = "TrapstarKS" -- change if you're using a fork
 local branch = "revision"
 local importCache = {}
