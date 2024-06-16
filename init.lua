@@ -5,6 +5,7 @@ if oh then
 end
 
 local web = true
+local DebugMode = true
 local user = "TrapstarKS" -- change if you're using a fork
 local branch = "revision"
 local importCache = {}
@@ -222,7 +223,7 @@ if readFile and writeFile then
             if asset:find("rbxassetid://") then
                 assets = { game:GetObjects(asset)[1] }
             elseif web then
-                if readFile and writeFile then
+                if readFile and writeFile and not DebugMode then
                     local file = (hasFolderFunctions and "hydroxide/user/" .. user .. '/' .. asset .. ".lua") or ("hydroxide-" .. user .. '-' .. asset:gsub('/', '-') .. ".lua")
                     local content
 
