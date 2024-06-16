@@ -372,7 +372,7 @@ local function createArg(instance, index, value)
     arg.Index.Text = index
     
     if valueType == "table" then
-        arg.Label.Text = toString(value)
+        arg.Label.Text = tableToString(value)
     else
         arg.Label.Text = dataToString(value)
     end
