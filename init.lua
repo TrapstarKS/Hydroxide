@@ -5,7 +5,7 @@ if oh then
 end
 
 local web = true
-local DebugMode = true
+local DebugMode = false
 print("Hydroxide is loading..." .. (DebugMode and " (Debug Mode)" or ""))
 local user = "TrapstarKS" -- change if you're using a fork
 local branch = "revision"
@@ -244,7 +244,6 @@ if readFile and writeFile then
 
                     assets = { loadstring(content, asset .. '.lua')() }
                 else
-                    print("Debug mode is enabled", asset)
                     assets = { loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/" .. user .. "/Hydroxide/" .. branch .. '/' .. asset .. ".lua"), asset .. '.lua')() }
                 end
             else
