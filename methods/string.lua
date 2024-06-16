@@ -3,7 +3,7 @@ local methods = {}
 local function toString(value)
     local dataType = typeof(value)
 
-    if dataType == "table" then
+    if dataType == "table" and tableToString then
         return tableToString(value)
     end
 

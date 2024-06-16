@@ -191,6 +191,8 @@ if readFile and writeFile then
     local hasFolderFunctions = (isFolder and makeFolder) ~= nil
     local ran, result = pcall(readFile, "__oh_version.txt")
 
+    print(result, releaseInfo.tag_name, result == releaseInfo.tag_name)
+
     if not ran or releaseInfo.tag_name ~= result then
         if hasFolderFunctions then
             local function createFolder(path)
