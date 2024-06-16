@@ -158,43 +158,43 @@ if IsAnimeDefenders then
 		if not ModuleData.isReplicated and ModuleData.Fire ~= nil then
 			Remotes[_] = Instance.new("RemoteEvent")
 			local MethodName = _
-			local originalMethod
-			originalMethod = hookFunction(
-				ModuleData.Fire,
-				newCClosure(function(...)
-					local instance = Remotes[_]
-					print("Fired " .. _) -- debug
-					if instance.ClassName == "RemoteEvent" and remotesViewing[instance.ClassName] and instance ~= remoteDataEvent then
-						local remote = currentRemotes[instance]
-						local vargs = { ... }
+			local originalMethod = rawget(ModuleData, "Fire")
 
-						if not remote then
-							remote = Remote.new(instance)
-							currentRemotes[instance] = remote
-						end
+			rawset(ModuleData, "Fire", newCClosure(function(...)
+				local instance = Remotes[_]
+				print("Fired " .. _) -- debug
+				if instance.ClassName == "RemoteEvent" and remotesViewing[instance.ClassName] and instance ~= remoteDataEvent then
+					local remote = currentRemotes[instance]
+					local vargs = { ... }
 
-						local remoteIgnored = remote.Ignored
-						local argsIgnored = remote:AreArgsIgnored(vargs)
-
-						if eventSet and (not remoteIgnored and not argsIgnored) then
-							local call = {
-								script = getCallingScript((PROTOSMASHER_LOADED ~= nil and 2) or nil),
-								args = vargs,
-								func = getInfo(3).func,
-								IsAnimeDefenders = IsAnimeDefenders,
-								AnimeDefendersRemote = MethodName,
-							}
-
-							remote:IncrementCalls(call)
-							remoteDataEvent:Fire(instance, call)
-						end
-
-						if remote.Blocked or remote:AreArgsBlocked(vargs) then return end
+					if not remote then
+						remote = Remote.new(instance)
+						currentRemotes[instance] = remote
 					end
 
-					return originalMethod(...)
-				end)
-			)
+					local remoteIgnored = remote.Ignored
+					local argsIgnored = remote:AreArgsIgnored(vargs)
+
+					if eventSet and (not remoteIgnored and not argsIgnored) then
+						local call = {
+							script = getCallingScript((PROTOSMASHER_LOADED ~= nil and 2) or nil),
+							args = vargs,
+							func = getInfo(3).func,
+							IsAnimeDefenders = IsAnimeDefenders,
+							AnimeDefendersRemote = MethodName,
+						}
+
+						remote:IncrementCalls(call)
+						remoteDataEvent:Fire(instance, call)
+					end
+
+					if remote.Blocked or remote:AreArgsBlocked(vargs) then return end
+				end
+
+				return originalMethod(...)
+			end))
+
+			oh.Hooks[originalMethod] = Remotes[_]
 		end
 	end
 end
