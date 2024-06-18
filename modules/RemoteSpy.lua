@@ -206,9 +206,8 @@ if IsAnimeDefenders then
 					return originalMethod(...)
 				end)
 			)
+			oh.Hooks[originalMethod] = ModuleData[v]
 		end
-
-		oh.Hooks[originalMethod] = Remotes[_]
 	end
 end
 
