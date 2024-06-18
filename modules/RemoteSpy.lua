@@ -160,6 +160,7 @@ if IsAnimeDefenders then
 
 			local t = {}
 			if ModuleData.isReplicated then table.insert(t, "Fire") end
+			
 			if UseInvoke then table.insert(t, "Invoke") end
 			for _, v in pairs(t) do
 				print("Hooked: " .. ModuleData.name .. " " .. v)
