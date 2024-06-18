@@ -447,7 +447,12 @@ end
 
 function Log.incrementCalls(log, call)
     local logInstance = log.Button.Instance
+
+    if not logInstance then return end
+
     local hook = log.Hook
+
+    if not hook then return end
 
     hook.Calls = hook.Calls + 1
     local calls = hook.Calls
