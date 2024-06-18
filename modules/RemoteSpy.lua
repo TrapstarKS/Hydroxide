@@ -156,6 +156,7 @@ if IsAnimeDefenders then
 		local Remotes = {}
 		for _, ModuleData in pairs(Actions) do
 			local UseInvoke = game.ReplicatedStorage.Actions.Invokables:FindFirstChild(tostring(ModuleData.name))
+			print(ModuleData.name, UseInvoke)
 			if UseInvoke then print("Found Invoke: " .. ModuleData.name) end
 			if not (ModuleData.isReplicated or UseInvoke) then continue end
 
