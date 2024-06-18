@@ -445,6 +445,8 @@ function Log.incrementCalls(log, callInfo)
 	local remote = log.Remote
 	local calls = remote.Calls
 
+	if not buttonInstance or not buttonInstance:FindFirstChild("Calls") then return end
+
 	buttonInstance.Calls.Text = (calls < 10000 and calls) or "..."
 
 	log:Adjust()
