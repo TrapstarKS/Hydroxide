@@ -167,6 +167,7 @@ if IsAnimeDefenders then
 					ModuleData,
 					v,
 					newCClosure(function(...)
+						print("AnimeDefenders Remote: " .. MethodName)
 						local instance = remoteF
 						local method = v == "Fire" and "FireServer" or "InvokeServer"
 						if remotesViewing[instance.ClassName] and instance ~= remoteDataEvent and remoteMethods[method] then
