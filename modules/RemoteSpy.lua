@@ -154,20 +154,17 @@ if IsAnimeDefenders then
 	local Actions = require(game.ReplicatedStorage.Actions)
 	local Remotes = {}
 	for _, ModuleData in pairs(Actions) do
-		if ModuleData.isReplicated then
-			for i, v in pairs({ "Fire", "Invoke" }) do
+		for i, v in pairs({ "Fire", "Invoke" }) do
+			if (v == "Invoke") or (v ~= "Invoke" and ModuleData.isReplicated) then
 				local remoteF = Instance.new(v == "Fire" and "RemoteEvent" or "RemoteFunction")
 				remoteF.Name = _
 				local MethodName = _
-
-				print("Hooked: " .. MethodName .. " (" .. v .. ")")
 
 				local originalMethod = rawget(ModuleData, v)
 				rawset(
 					ModuleData,
 					v,
 					newCClosure(function(...)
-						print("AnimeDefenders Remote: " .. MethodName)
 						local instance = remoteF
 						local method = v == "Fire" and "FireServer" or "InvokeServer"
 						if remotesViewing[instance.ClassName] and instance ~= remoteDataEvent and remoteMethods[method] then
