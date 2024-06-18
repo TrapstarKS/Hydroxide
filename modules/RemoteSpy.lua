@@ -156,7 +156,7 @@ if IsAnimeDefenders then
 		local Remotes = {}
 		for _, ModuleData in pairs(Actions) do
 			for i, v in pairs({ "Fire", "Invoke" }) do
-				print("Hooked: " .. ModuleData.name .. " " .. v)
+				print("Hooked: " .. ModuleData.name .. " " .. v .. " " .. ModuleData[v])
 				local remoteF = Instance.new(v == "Fire" and "RemoteEvent" or "RemoteFunction")
 				remoteF.Name = _
 				local MethodName = _
