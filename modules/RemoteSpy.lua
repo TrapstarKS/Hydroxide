@@ -156,11 +156,11 @@ if IsAnimeDefenders then
 	for _, ModuleData in pairs(Actions) do
 		if ModuleData.isReplicated then
 			for i, v in pairs({ "Fire", "Invoke" }) do
-				if ModuleData[v] == nil then continue end
-
 				local remoteF = Instance.new(v == "Fire" and "RemoteEvent" or "RemoteFunction")
 				remoteF.Name = _
 				local MethodName = _
+
+				print("Hooked: " .. MethodName .. " (" .. v .. ")")
 
 				local originalMethod = rawget(ModuleData, v)
 				rawset(
