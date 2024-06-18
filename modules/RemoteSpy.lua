@@ -151,65 +151,67 @@ for _name, hook in pairs(methodHooks) do
 end
 
 if IsAnimeDefenders then
-	local Actions = require(game.ReplicatedStorage.Actions)
-	local Remotes = {}
-	for _, ModuleData in pairs(Actions) do
-		local UseInvoke = game.ReplicatedStorage.Actions.Invokables:FindFirstChild(ModuleData.name)
-		if not ModuleData.isReplicated and not UseInvoke then continue end
+	task.spawn(function()
+		local Actions = require(game.ReplicatedStorage.Actions)
+		local Remotes = {}
+		for _, ModuleData in pairs(Actions) do
+			local UseInvoke = game.ReplicatedStorage.Actions.Invokables:FindFirstChild(ModuleData.name)
+			if not ModuleData.isReplicated and not UseInvoke then continue end
 
-		local t = {}
-		if ModuleData.isReplicated then table.insert(t, "Fire") end
-		if UseInvoke then table.insert(t, "Invoke") end
-		for _, v in pairs(t) do
-			print("Hooked: " .. ModuleData.name .. " " .. v)
-			local remoteF = Instance.new(v == "Fire" and "RemoteEvent" or "RemoteFunction")
-			remoteF.Name = _
-			local MethodName = _
+			local t = {}
+			if ModuleData.isReplicated then table.insert(t, "Fire") end
+			if UseInvoke then table.insert(t, "Invoke") end
+			for _, v in pairs(t) do
+				print("Hooked: " .. ModuleData.name .. " " .. v)
+				local remoteF = Instance.new(v == "Fire" and "RemoteEvent" or "RemoteFunction")
+				remoteF.Name = _
+				local MethodName = _
 
-			local originalMethod = rawget(ModuleData, v)
-			rawset(
-				ModuleData,
-				v,
-				newCClosure(function(...)
-					print("AnimeDefenders Remote: " .. MethodName .. " " .. v)
-					local instance = remoteF
-					local method = v == "Fire" and "FireServer" or "InvokeServer"
-					if remotesViewing[instance.ClassName] and instance ~= remoteDataEvent and remoteMethods[method] then
-						local remote = currentRemotes[instance]
-						local vargs = { select(2, ...) }
+				local originalMethod = rawget(ModuleData, v)
+				rawset(
+					ModuleData,
+					v,
+					newCClosure(function(...)
+						print("AnimeDefenders Remote: " .. MethodName .. " " .. v)
+						local instance = remoteF
+						local method = v == "Fire" and "FireServer" or "InvokeServer"
+						if remotesViewing[instance.ClassName] and instance ~= remoteDataEvent and remoteMethods[method] then
+							local remote = currentRemotes[instance]
+							local vargs = { select(2, ...) }
 
-						if not remote then
-							remote = Remote.new(instance)
-							currentRemotes[instance] = remote
+							if not remote then
+								remote = Remote.new(instance)
+								currentRemotes[instance] = remote
+							end
+
+							local remoteIgnored = remote.Ignored
+							local remoteBlocked = remote.Blocked
+							local argsIgnored = remote.AreArgsIgnored(remote, vargs)
+							local argsBlocked = remote.AreArgsBlocked(remote, vargs)
+
+							if eventSet and (not remoteIgnored and not argsIgnored) then
+								local call = {
+									script = getCallingScript((PROTOSMASHER_LOADED ~= nil and 2) or nil),
+									args = vargs,
+									func = getInfo(3).func,
+									IsAnimeDefenders = IsAnimeDefenders,
+									AnimeDefendersRemote = MethodName,
+									MethodAnimeDefenders = v,
+								}
+								remote.IncrementCalls(remote, call)
+								remoteDataEvent.Fire(remoteDataEvent, instance, call)
+							end
+
+							if remoteBlocked or argsBlocked then return end
 						end
 
-						local remoteIgnored = remote.Ignored
-						local remoteBlocked = remote.Blocked
-						local argsIgnored = remote.AreArgsIgnored(remote, vargs)
-						local argsBlocked = remote.AreArgsBlocked(remote, vargs)
-
-						if eventSet and (not remoteIgnored and not argsIgnored) then
-							local call = {
-								script = getCallingScript((PROTOSMASHER_LOADED ~= nil and 2) or nil),
-								args = vargs,
-								func = getInfo(3).func,
-								IsAnimeDefenders = IsAnimeDefenders,
-								AnimeDefendersRemote = MethodName,
-								MethodAnimeDefenders = v,
-							}
-							remote.IncrementCalls(remote, call)
-							remoteDataEvent.Fire(remoteDataEvent, instance, call)
-						end
-
-						if remoteBlocked or argsBlocked then return end
-					end
-
-					return originalMethod(...)
-				end)
-			)
-			oh.Hooks[originalMethod] = ModuleData[v]
+						return originalMethod(...)
+					end)
+				)
+				oh.Hooks[originalMethod] = ModuleData[v]
+			end
 		end
-	end
+	end)
 end
 
 RemoteSpy.RemotesViewing = remotesViewing
