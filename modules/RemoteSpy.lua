@@ -154,8 +154,13 @@ if IsAnimeDefenders then
 	local Actions = require(game.ReplicatedStorage.Actions)
 	local Remotes = {}
 	for _, ModuleData in pairs(Actions) do
-		for i, v in pairs({ "Fire", "Invoke" }) do
-			if v == "Fire" and not ModuleData.isReplicated then continue end
+		local UseInvoke = game.ReplicatedStorage.Actions.Invokables:FindFirstChild(ModuleData.name)
+		if not ModuleData.isReplicated and not UseInvoke then continue end
+
+		local t = {}
+		if ModuleData.isReplicated then table.insert(t, "Fire") end
+		if UseInvoke then table.insert(t, "Invoke") end
+		for _, v in pairs(t) do
 			local remoteF = Instance.new(v == "Fire" and "RemoteEvent" or "RemoteFunction")
 			remoteF.Name = _
 			local MethodName = _
@@ -201,9 +206,9 @@ if IsAnimeDefenders then
 					return originalMethod(...)
 				end)
 			)
-
-			oh.Hooks[originalMethod] = Remotes[_]
 		end
+
+		oh.Hooks[originalMethod] = Remotes[_]
 	end
 end
 
