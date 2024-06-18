@@ -161,6 +161,7 @@ if IsAnimeDefenders then
 		if ModuleData.isReplicated then table.insert(t, "Fire") end
 		if UseInvoke then table.insert(t, "Invoke") end
 		for _, v in pairs(t) do
+			print("Hooked: " .. ModuleData.name .. " " .. v)
 			local remoteF = Instance.new(v == "Fire" and "RemoteEvent" or "RemoteFunction")
 			remoteF.Name = _
 			local MethodName = _
